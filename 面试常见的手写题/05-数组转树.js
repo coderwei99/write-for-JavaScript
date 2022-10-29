@@ -103,34 +103,45 @@ let originalObj = [
 
 // 1. 递归
 // 处理parentData 和childrenData 之间关系的函数
-function parseChildrenToParent(parentData, childrenData) {
-  childrenData.forEach(item => {
-    const tempData = parentData.find(_item => _item.id == item.pid);
-    if (!tempData) return;
-    tempData.children = tempData.children ?? [];
-    tempData.children.push(item);
-    // if (tempData.children) {
-    //   // 有值 递归
-    //   tempData.children.push(item);
-    // } else {
-    //   tempData.children = [item];
-    // }
-    parseChildrenToParent([item], childrenData);
+// function parseChildrenToParent(parentData, childrenData) {
+//   childrenData.forEach(item => {
+//     const tempData = parentData.find(_item => _item.id == item.pid);
+//     if (!tempData) return;
+//     tempData.children = tempData.children ?? [];
+//     tempData.children.push(item);
+//     // if (tempData.children) {
+//     //   // 有值 递归
+//     //   tempData.children.push(item);
+//     // } else {
+//     //   tempData.children = [item];
+//     // }
+//     parseChildrenToParent([item], childrenData);
+//   });
+// }
+
+// function arrayToTree(arr) {
+//   let tree = [];
+
+//   function findParent(arr, pid = 0) {
+//     const parentData = arr.filter(item => item.pid == 0),
+//       childrenData = arr.filter(item => item.pid != 0);
+//     parseChildrenToParent(parentData, childrenData);
+//     tree = parentData;
+//   }
+
+//   findParent(arr);
+//   return tree;
+// }
+
+// console.log(arrayToTree(originalObj));
+
+// 2. 双重遍历
+const formatData = arr => {
+  return arr.filter(item => {
+    const _arr = arr.filter(_item => _item.pid == item.id);
+    _arr.length && (item.children = _arr);
+    return item.pid === 0;
   });
-}
+};
 
-function arrayToTree(arr) {
-  let tree = [];
-
-  function findParent(arr, pid = 0) {
-    const parentData = arr.filter(item => item.pid == 0),
-      childrenData = arr.filter(item => item.pid != 0);
-    parseChildrenToParent(parentData, childrenData);
-    tree = parentData;
-  }
-
-  findParent(arr);
-  return tree;
-}
-
-console.log(arrayToTree(originalObj));
+console.log(formatData(originalObj));
